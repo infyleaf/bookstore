@@ -2,11 +2,14 @@ package hh.swd20.Bookstore.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +20,11 @@ import hh.swd20.Bookstore.domain.BookRepository;
 import hh.swd20.Bookstore.domain.Category;
 import hh.swd20.Bookstore.domain.CategoryRepository;
 
+@CrossOrigin
 @Controller
 public class BookController {
+
+	
 	@Autowired
 	private BookRepository repository;
 		
@@ -33,6 +39,27 @@ public class BookController {
 	
 	
 }
+    // Book lista > json list
+   
+    @RequestMapping(value="/books", method = RequestMethod.GET)
+    public @ResponseBody List<Book> BookListRest() {	
+        return (List<Book>) repository.findAll();
+    }
+    
+	// REST to get book by id
+    @RequestMapping(value="/books/{id}", method = RequestMethod.GET)
+    public @ResponseBody Optional<Book> findBookRest(@PathVariable("id") Long bookId) {	
+    	return repository.findById(bookId);
+    }      
+    // REST to save new book
+    @RequestMapping(value="/books", method = RequestMethod.POST)
+    public @ResponseBody Book saveBookRest(@RequestBody Book book) {	
+    	return repository.save(book);
+    }
+    
+    
+    
+    
 	
 	@RequestMapping(value = "/add")
 	public String addBook(Model model) {
